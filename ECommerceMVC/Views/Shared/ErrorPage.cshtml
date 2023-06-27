@@ -1,0 +1,13 @@
+﻿@{
+    ViewData["Title"] = "Error Page";
+}
+
+@model ErrorLog
+
+<div class="error-container">
+    <div class="error-bckgr"></div>
+    <div class="container error-text">
+        <h1>Ooops.. <i class="bi bi-cart-x fs-1"></i></h1>
+        <p>@Model.ErrorMessage</p>
+    </div>
+</div>

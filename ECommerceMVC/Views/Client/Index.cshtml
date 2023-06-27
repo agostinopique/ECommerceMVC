@@ -1,0 +1,91 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    ViewBag.Title = "Students";
+}
+
+@model IEnumerable<Client>
+@*@model PagedList.IPagedList<Client>*@
+@using PagedList;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+    <div class="container">
+    <div class="d-flex justify-content-end">
+        <a href="@Url.Action("Create","Client")" class="m-0" data-toggle="tooltip" data-placement="top" title="Create a new Client">
+            <i class="bi bi-plus-lg text-dark fs-3"></i>
+        </a>
+    </div>
+
+    @if (TempData.ContainsKey("createdClient"))
+    {
+        <div class="alert alert-success" role="alert">
+            Client created successfully.
+        </div>
+
+        TempData.Clear();
+    }
+
+    @if (TempData.ContainsKey("deleteClient"))
+    {
+        <div class="alert alert-danger" role="alert">
+            Client created successfully.
+        </div>
+
+        TempData.Clear();
+    }
+
+    @using (Html.BeginForm("Index", "Client", FormMethod.Get))
+    {
+        <p class="d-flex align-items-center">
+            Find by name:
+            <span class="m-1">
+                @*<input type="text" class="form-control" name="SearchString" value="" aria-label="Username" aria-describedby="addon-wrapping">*@
+                @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)</span>
+            <input class="btn btn-primary" type="submit" value="Search" />
+        </p>
+    }
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#Id</th>
+                <th scope="col">
+                    @Html.ActionLink("Name", "Index", new { sortOrder = ViewBag.NameSortParm })
+                </th>
+                <th scope="col">
+                    @Html.ActionLink("Email", "Index", new { sortOrder = ViewBag.MailSortParm })
+                </th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int count = 0;
+            }
+            @foreach (Client clt in Model)
+            {
+                <tr>
+                    <th scope="row">@count</th>
+                    <td>@clt.FullName</td>
+                    <td>@clt.Email</td>
+                    <td><a class ="btn btn-primary" href="@Url.Action("Details", "Client", new {id = clt.Id})">Details</a></td>
+                    <td><a class="btn btn-warning" href="@Url.Action("EditClient", "Client", new {id = clt.Id})">Edit</a></td>
+                    <td>
+                        <form asp-controller="Client" asp-action="Delete" asp-route-id="@clt.Id" method="post">
+                            @Html.AntiForgeryToken()
+                            <button class="btn btn-danger" type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                count++;
+            }
+        </tbody>
+    </table>
+    @*
+    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+    @Html.PagedListPager(Model, page => Url.Action("Index",
+        new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+    *@
+</div>

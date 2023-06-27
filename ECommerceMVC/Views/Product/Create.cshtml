@@ -1,0 +1,22 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@model Product
+    <div class="container">
+    <form asp-controller="Product" asp-action="Store" method="post">
+        @Html.AntiForgeryToken()
+        <div class="mb-3">
+            <label for="name" class="form-label">Product's name:</label>
+            <input type="text" class="form-control" id="name" asp-for="Name">
+            <span class="text-danger" asp-validation-for="Name"></span>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Price:</label>
+            <input class="form-control" id="description" asp-for="Price">
+            <span class="text-danger" asp-validation-for="Price"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Salva</button>
+    </form>
+</div>

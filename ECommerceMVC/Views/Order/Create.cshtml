@@ -1,0 +1,47 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@model OrderObj
+    <div class="container">
+    <form asp-controller="Order" asp-action="Store" method="post">
+        @Html.AntiForgeryToken()
+
+        <div class="mb-3">
+            <h3>Select which client to register this new order</h3>
+     
+            <div class="mb-3 d-flex justify-content-between">
+                @foreach (Client client in Model.ClientId)
+                {
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="radio" id="@client.Id" asp-for="Order.ClientId" value="@client.Id">
+                        <label class="form-check-label" for="@client.Id">
+                            @client.FullName
+                        </label>
+                    </div>
+
+                }
+            </div>
+        </div>
+
+        <div class="mb-3 d-flex flex-column">
+           <h3>Select the desired products in the </h3>
+
+            @foreach (Product prod in Model.Products)
+            {
+                <div class="form-check">
+                    <input name="SelectedProducts" class="form-check-input" type="checkbox" value="@prod.Id" id="$product{@prod.Id}">
+                    <label class="form-check-label" for="$product{@prod.Id}">
+                        @prod.Name
+                    </label>
+                    <label class="form-check-label" for="$product{@prod.Id}">
+                        Euro @prod.Price
+                    </label>
+                </div>
+            }
+        
+        </div>
+
+        <button type="submit" class="btn btn-primary">Salva</button>
+    </form>
+</div>

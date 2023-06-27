@@ -1,0 +1,42 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@model Client
+<div class="container detail-page">
+    <div class="card">
+        <div class="card-header">
+            <h1>@Model.FullName</h1>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">Name: @Model.FullName</h5>
+            <p class="card-text">Email: @Model.Email</p>
+
+            <p>
+                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                Orders
+                </button>
+            </p>
+
+            <div class="collapse" id="collapseExample">
+                <div class="card card-body">
+                    <ul>
+                        @if(Model.Orders.Count() > 0)
+                        {
+                            @foreach (Order ord in Model.Orders)
+                            {
+                                <li>Order identification number: @ord.IdentificationNumber</li>
+                            }
+                        } 
+                        else 
+                        {
+                            <li>No orders are associated to this client</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+
+            <a href="@Url.Action("Index", "Client")" class="btn btn-primary">Go back</a>
+        </div>
+    </div>
+</div>

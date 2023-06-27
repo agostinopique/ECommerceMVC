@@ -1,0 +1,83 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@model IEnumerable<Order>
+    <div class="container">
+    <div class="d-flex justify-content-end">
+        <a href="@Url.Action("Create","Order")" class="m-0" data-toggle="tooltip" data-placement="top" title="Create a new Order">
+            <i class="bi bi-plus-lg text-dark fs-3"></i>
+        </a>
+    </div>
+
+    @if (TempData.ContainsKey("createOrder"))
+    {
+        <div class="alert alert-success" role="alert">
+            Order created successfully.
+        </div>
+        TempData.Clear();
+    }
+
+    @if (TempData.ContainsKey("deleteOrder"))
+    {
+        <div class="alert alert-danger" role="alert">
+            Order deleted successfully.
+        </div>
+        TempData.Clear();
+    }
+
+    @using (Html.BeginForm("Index", "Order", FormMethod.Get))
+    {
+        <p class="search-field">
+            Find by price, by id number or price: 
+        </p>
+        @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+        <input class="btn btn-primary" type="submit" value="Search" />
+        <p>To reset clear the field</p>
+    }
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#Id</th>
+                <th scope="col">
+                    @Html.ActionLink("Id number", "Index", new { sortOrder = ViewBag.IdSortParm })
+                </th>
+                <th scope="col">
+                    @Html.ActionLink("Total price", "Index", new { sortOrder = ViewBag.PriceSortParm })
+
+                </th>
+                <th scope="col">
+                    @Html.ActionLink("Owner", "Index", new { sortOrder = ViewBag.NameSortParm })
+                </th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int count = 0;
+            }
+            @foreach (Order ord in Model)
+            {
+                <tr>
+                    <th scope="row">@count</th>
+                    <td>@ord.IdentificationNumber</td>
+                    <td>@ord.TotalPrice</td>
+                    <td>@ord.Client.FullName</td>
+                    <td><a class="btn btn-primary" href="@Url.Action("Details", "Order", new {id = ord.Id})">Details</a></td>
+                    <td><a class="btn btn-warning" href="@Url.Action("Edit", "Order", new {id = ord.Id})">Edit</a></td>
+                    <td>
+                        <form asp-controller="Order" asp-action="Delete" asp-route-id="@ord.Id" method="post">
+                            @Html.AntiForgeryToken()
+                            <button class="btn btn-danger" type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                count++;
+            }
+        </tbody>
+    </table>
+
+</div>

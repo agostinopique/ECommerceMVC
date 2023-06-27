@@ -1,0 +1,22 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@model Client
+    <div class="container">
+    <form asp-controller="Client" asp-action="Store" method="post">
+        @Html.AntiForgeryToken()
+        <div class="mb-3">
+            <label for="name" class="form-label">Insert the clients full name:</label>
+            <input type="text" class="form-control" id="name" asp-for="FullName">
+            <span class="text-danger" asp-validation-for="FullName"></span>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Email:</label>
+            <input type="email" class="form-control" id="description" asp-for="Email">
+            <span class="text-danger" asp-validation-for="Email"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Salva</button>
+    </form>
+</div>

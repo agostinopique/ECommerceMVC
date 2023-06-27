@@ -1,0 +1,56 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@model OrderObj
+
+<div class="container">
+    <form asp-controller="Order" asp-action="Update" asp-route-id="@Model.Order.Id" method="post">
+        @Html.AntiForgeryToken()
+
+        <div class="mb-3">
+            <h3>Select which client to register this new order</h3>
+
+            <div class="mb-3 d-flex justify-content-between">
+                @foreach (Client client in Model.ClientId)
+                {
+                    <div class="form-check mb-3">
+                        @if(Model.Order.ClientId == client.Id)
+                        {
+                            <input class="form-check-input" type="radio" id="@client.Id" asp-for="Order.ClientId" value="@client.Id" checked>
+                            <label class="form-check-label" for="@client.Id">
+                                @client.FullName
+                            </label>
+                        }
+                        else
+                        {
+                            <input class="form-check-input" type="radio" id="@client.Id" asp-for="Order.ClientId" value="@client.Id">
+                            <label class="form-check-label" for="@client.Id">
+                                @client.FullName
+                            </label>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="mb-3 d-flex flex-column">
+            <h3>Select the desired products in the </h3>
+            <select class="w-50" id="products" asp-for="SelectedProducts" multiple="multiple">
+                @foreach (Product prod in Model.Products)
+                {
+                    @if (Model.Order.Products.Contains(prod))
+                    {
+                        <option value="@prod.Id" selected>@prod.Name</option>
+                    }
+                    else
+                    {
+                        <option value="@prod.Id">@prod.Name</option>
+                    }
+                }
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Salva</button>
+    </form>
+</div>

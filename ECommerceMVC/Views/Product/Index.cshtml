@@ -1,0 +1,94 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+@using PagedList;
+@*@model IEnumerable<Product>*@
+@model IPagedList<ECommerceMVC.Models.Product>
+
+<div class="container">
+
+    <div class="d-flex justify-content-end">
+        <a href="@Url.Action("Create","Product")" class="m-0" data-toggle="tooltip" data-placement="top" title="Create a new Product">
+            <i class="bi bi-plus-lg text-dark fs-3"></i>
+        </a>
+    </div>
+
+    @if (TempData.ContainsKey("createProduct"))
+    {
+        <div class="alert alert-success" role="alert">
+            Product added successfully.
+        </div>
+
+        TempData.Clear();
+    }
+    @if (TempData.ContainsKey("deleteProduct"))
+    {
+        <div class="alert alert-danger" role="alert">
+            Product deleted successfully.
+        </div>
+
+        TempData.Clear();
+    }
+
+
+    @using (Html.BeginForm("Index", "Product", FormMethod.Get))
+    {
+        <p class="search-field">
+            Find by product name:
+        </p>
+        @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+        <input class="btn btn-primary" type="submit" value="Search" />
+        <p>To reset clear the field</p>
+    }
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#Id</th>
+                <th scope="col">
+                    @Html.ActionLink("Name", "Index", new { sortOrder = ViewBag.NameSortParm })
+                </th>
+                <th scope="col">
+                    @Html.ActionLink("Price", "Index", new { sortOrder = ViewBag.PriceSortParm })
+                </th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int count = 0;
+            }
+            @foreach (Product prod in Model)
+            {
+                <tr>
+                    <th scope="row">@count</th>
+                    <td>@prod.Name</td>
+                    <td>@prod.Price</td>
+                    <td><a class="btn btn-primary" href="@Url.Action("Details", "Product", new {id = prod.Id})">Details</a></td>
+                    <td><a class="btn btn-warning" href="@Url.Action("EditProduct", "Product", new {id = prod.Id})">Edit</a></td>
+                    <td>
+                        <form asp-controller="Product" asp-action="Delete" asp-route-id="@prod.Id" method="post" id="deleteForm">
+                            @Html.AntiForgeryToken()
+                            <button class="btn btn-danger" type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                count++;
+            }
+        </tbody>
+    </table>
+
+    <div id="container" style="margin-left: 20px">
+        <p></p>
+        <p></p>
+        <div class="pagination" style="margin-left: 400px">
+            Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)
+            of @Model.PageCount
+
+            @*@Html.PagedListPager(Model, page => Url.Action("Product", "Index", new { page }))*@
+        </div>
+    </div>
+</div>
+
